@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant AI</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        #chatbox { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; margin-bottom: 10px; }
+        .user { text-align: right; color: blue; }
+        .ai { text-align: left; color: green; }
+        input, button { width: 100%; padding: 10px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h2>Assistant AI</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Pose ta question...">
+    <button onclick="sendMessage()">Envoyer</button>
+
+    <script>
+        async function sendMessage() {
+            let userInput = document.getElementById("userInput").value;
+            if (!userInput.trim()) return;
+
+            let chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML += `<p class='user'><strong>Toi :</strong> ${userInput}</p>`;
+            document.getElementById("userInput").value = "";
+
+            try {
+                let response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer YOUR_OPENAI_API_KEY`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4",
+                        messages: [{ role: "user", content: userInput }]
+                    })
+                });
+
+                let data = await response.json();
+                let aiMessage = data.choices[0].message.content;
+                chatbox.innerHTML += `<p class='ai'><strong>AI :</strong> ${aiMessage}</p>`;
+                chatbox.scrollTop = chatbox.scrollHeight;
+            } catch (error) {
+                chatbox.innerHTML += `<p class='ai'><strong>AI :</strong> Erreur de connexion.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
