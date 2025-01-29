@@ -32,7 +32,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`
+                        "Authorization": "Bearer sk-TA_CLE_API_ICI"
                     },
                     body: JSON.stringify({
                         model: "gpt-4",
@@ -41,11 +41,11 @@
                 });
 
                 let data = await response.json();
-                let aiMessage = data.choices[0].message.content;
-                chatbox.innerHTML += `<p class='ai'><strong>AI :</strong> ${aiMessage}</p>`;
+                chatbox.innerHTML += `<p class='ai'><strong>AI :</strong> ${data.choices[0].message.content}</p>`;
                 chatbox.scrollTop = chatbox.scrollHeight;
             } catch (error) {
-                chatbox.innerHTML += `<p class='ai'><strong>AI :</strong> Erreur de connexion.</p>`;
+                chatbox.innerHTML += `<p class='ai'><strong>AI :</strong> Une erreur s'est produite.</p>`;
+                console.error("Erreur :", error);
             }
         }
     </script>
